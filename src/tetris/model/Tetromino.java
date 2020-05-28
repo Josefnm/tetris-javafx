@@ -3,14 +3,11 @@ package tetris.model;
 
 import javafx.scene.paint.Color;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class Tetromino {
 
     // center position of the tetromino
     private Point position;
+    //positions relative to base position of the tetromino
     private Point[] piecePositions;
     private Color color;
 
