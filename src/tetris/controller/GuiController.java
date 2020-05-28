@@ -2,6 +2,7 @@ package tetris.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 
 public class GuiController {
@@ -22,4 +23,9 @@ public class GuiController {
         gameCanvas.setHeight(600);
         gameCanvas.setWidth(300);
     }
+
+    public GraphicsContext getGraphicsContext() {
+        return gameCanvas.getGraphicsContext2D();
+    }
+
 }

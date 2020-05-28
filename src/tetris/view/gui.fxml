@@ -5,10 +5,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane prefWidth="700.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="tetris.controller.GuiController">
-    <StackPane id="gameBackdrop" layoutX="200.0" style="-fx-background-color: #000;">
-        <Canvas id="canvas" fx:id="gameCanvas"/>
+    <StackPane layoutX="200.0" style="-fx-background-color: #000;">
+        <Canvas fx:id="gameCanvas"/>
     </StackPane>
     <Label alignment="CENTER_RIGHT" layoutX="510.0" layoutY="42.0" prefHeight="45.0" prefWidth="85.0"
            text="Lines cleared: "/>

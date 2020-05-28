@@ -8,12 +8,15 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    private final static String TITLE = "Tetris";
+
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("view/gui.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Tetris");
+
+        primaryStage.setTitle(TITLE);
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
