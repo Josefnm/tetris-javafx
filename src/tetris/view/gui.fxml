@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tetris.controller.GuiController">
+    <StackPane id="gameBackdrop" layoutX="200.0" style="-fx-background-color: #000;">
+        <Canvas id="canvas" fx:id="gameCanvas"/>
+    </StackPane>
+    <Label alignment="CENTER_RIGHT" layoutX="510.0" layoutY="42.0" prefHeight="45.0" prefWidth="85.0"
+           text="Lines cleared: "/>
+    <Label fx:id="clearedLabel" layoutX="595.0" layoutY="42.0" prefHeight="45.0" prefWidth="78.0"/>
+    <Label alignment="CENTER_RIGHT" layoutX="510.0" layoutY="132.0" prefHeight="45.0" prefWidth="85.0" text="Score: "/>
+    <Label fx:id="scoreLabel" layoutX="595.0" layoutY="132.0" prefHeight="45.0" prefWidth="78.0"/>
+    <Label alignment="CENTER_RIGHT" layoutX="510.0" layoutY="87.0" prefHeight="45.0" prefWidth="85.0" text="Level: "/>
+    <Label fx:id="levelLabel" layoutX="595.0" layoutY="87.0" prefHeight="45.0" prefWidth="78.0"/>
+    <Label fx:id="gameOverLabel" alignment="CENTER" layoutX="510.0" layoutY="177.0" prefHeight="45.0" prefWidth="168.0"
+           text="Game over" textAlignment="CENTER" visible="false">
+        <font>
+            <Font size="19.0"/>
+        </font>
+    </Label>
+</AnchorPane>
