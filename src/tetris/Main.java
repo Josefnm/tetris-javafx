@@ -1,6 +1,9 @@
 package tetris;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
