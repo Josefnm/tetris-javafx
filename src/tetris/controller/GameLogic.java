@@ -67,15 +67,23 @@ public class GameLogic {
         List<Point> pieces = tetromino.getAbsolutePositions();
         if (pieces.stream().anyMatch(this::isInvalidMove)) {
             revertMove.accept(tetromino);
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     public void tryMoveDown() {
         if (!tryMove(Tetromino::moveDown, Tetromino::moveUp)) {
-           //TODO end turn and spawn new piece
+           endTetromino();
         }
+    }
+
+    private void endTetromino() {
+        var pieces = tetromino.getAbsolutePositions();
+        for (Point piece : pieces) {
+            gameGrid[piece.getX()][ piece.getY()] = tetromino.getColor();
+        }
+        tetromino = tetrominoGenerator.getRandomTetromino();
     }
 
     private boolean isInvalidMove(Point point) {
