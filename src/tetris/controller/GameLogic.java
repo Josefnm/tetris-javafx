@@ -20,6 +20,8 @@ public class GameLogic {
 
     private int frame = 0;
 
+    private int rowsCleared = 0;
+
     private TetrominoGenerator tetrominoGenerator;
     private Color[][] gameGrid;
     private Tetromino tetromino;
@@ -100,6 +102,7 @@ public class GameLogic {
         for (Point piece : pieces) {
             gameGrid[piece.getX()][piece.getY()] = tetromino.getColor();
         }
+        rowsCleared += removeFullRows();
         tetromino = tetrominoGenerator.getRandomTetromino();
     }
 
@@ -117,5 +120,33 @@ public class GameLogic {
 
     private boolean isOverlap(Point p) {
         return p.getY() >= 0 && gameGrid[p.getX()][p.getY()] != null;
+    }
+
+    private int removeFullRows() {
+        int rowsCleared = 0;
+        for (int i = 0; i < BOARD_HEIGHT; i++) {
+            if (isFullRow(i)) {
+                removeRow(i);
+                rowsCleared++;
+            }
+        }
+        return rowsCleared;
+    }
+
+    private boolean isFullRow(int row) {
+        for (int x = 0; x < BOARD_WIDTH; x++) {
+            if (gameGrid[x][row] == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void removeRow(int row) {
+        for (int y = row; y > 0; y--) {
+            for (int x = 0; x < BOARD_WIDTH; x++) {
+                gameGrid[x][y] = gameGrid[x][y - 1];
+            }
+        }
     }
 }
