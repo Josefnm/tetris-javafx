@@ -41,7 +41,7 @@ public class GameLogic {
                 frame++;
                 // javafx runs at 60 frames by default. Pieces drop every DROP_SPEED frames.
                 if (frame % DROP_SPEED == 0) {
-                    tryMove(Tetromino::moveDown, Tetromino::moveUp);
+                    tryMoveDown();
                     render();
                 }
             }
@@ -51,9 +51,26 @@ public class GameLogic {
 
     public void render() {
         graphicsContext.clearRect(0, 0, TILE_SIZE * BOARD_WIDTH, TILE_SIZE * BOARD_HEIGHT);
+        renderTetromino();
+        renderBoard();
+    }
+
+    private void renderTetromino() {
         graphicsContext.setFill(tetromino.getColor());
         for (Point p : tetromino.getAbsolutePositions()) {
             paintPiece(p.getX(), p.getY());
+        }
+    }
+
+    private void renderBoard() {
+        for (int x = 0; x < BOARD_WIDTH; x++) {
+            for (int y = 0; y < BOARD_HEIGHT; y++) {
+                Color color = gameGrid[x][y];
+                if (color != null) {
+                    graphicsContext.setFill(color);
+                    paintPiece(x, y);
+                }
+            }
         }
     }
 
@@ -62,13 +79,28 @@ public class GameLogic {
         graphicsContext.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
     }
 
-
-    public void tryMove(Consumer<Tetromino> move, Consumer<Tetromino> revertMove) {
+    public boolean tryMove(Consumer<Tetromino> move, Consumer<Tetromino> revertMove) {
         move.accept(tetromino);
         List<Point> pieces = tetromino.getAbsolutePositions();
         if (pieces.stream().anyMatch(this::isInvalidMove)) {
             revertMove.accept(tetromino);
+            return false;
         }
+        return true;
+    }
+
+    public void tryMoveDown() {
+        if (!tryMove(Tetromino::moveDown, Tetromino::moveUp)) {
+            endTetromino();
+        }
+    }
+
+    private void endTetromino() {
+        var pieces = tetromino.getAbsolutePositions();
+        for (Point piece : pieces) {
+            gameGrid[piece.getX()][piece.getY()] = tetromino.getColor();
+        }
+        tetromino = tetrominoGenerator.getRandomTetromino();
     }
 
     private boolean isInvalidMove(Point point) {
