@@ -8,6 +8,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import tetris.controller.GameLogic;
 import tetris.controller.GuiController;
+import tetris.model.Tetromino;
 
 public class Main extends Application {
 
@@ -36,19 +37,19 @@ public class Main extends Application {
     public void keyEventHandler(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
             case Z:
-                gameLogic.getTetromino().rotateCounterClockwise();
+                gameLogic.tryMove(Tetromino::rotateCounterClockwise, Tetromino::rotateClockwise);
                 break;
             case X:
-                gameLogic.getTetromino().rotateClockwise();
+                gameLogic.tryMove(Tetromino::rotateClockwise, Tetromino::rotateCounterClockwise);
                 break;
             case DOWN:
-                gameLogic.getTetromino().moveDown();
+                gameLogic.tryMove(Tetromino::moveDown, Tetromino::moveUp);
                 break;
             case LEFT:
-                gameLogic.getTetromino().moveLeft();
+                gameLogic.tryMove(Tetromino::moveLeft, Tetromino::moveRight);
                 break;
             case RIGHT:
-                gameLogic.getTetromino().moveRight();
+                gameLogic.tryMove(Tetromino::moveRight, Tetromino::moveLeft);
                 break;
         }
         gameLogic.render();
