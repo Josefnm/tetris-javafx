@@ -23,7 +23,7 @@ public class GameLogic {
     private GraphicsContext graphicsContext;
 
     public GameLogic(GraphicsContext graphicsContext) {
-        this.graphicsContext=graphicsContext;
+        this.graphicsContext = graphicsContext;
         this.gameGrid = new Color[BOARD_WIDTH][BOARD_HEIGHT];
         this.tetrominoGenerator = new TetrominoGenerator();
         this.tetromino = tetrominoGenerator.getRandomTetromino();
@@ -46,7 +46,7 @@ public class GameLogic {
         animationTimer.start();
     }
 
-    public void render(){
+    public void render() {
         graphicsContext.clearRect(0, 0, TILE_SIZE * BOARD_WIDTH, TILE_SIZE * BOARD_HEIGHT);
         graphicsContext.setFill(tetromino.getColor());
         for (Point p : tetromino.getAbsolutePositions()) {
@@ -58,6 +58,23 @@ public class GameLogic {
         graphicsContext.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
         graphicsContext.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
     }
+
+    private boolean isInvalidMove(Point point) {
+        return isOutside(point) || isBottom(point) || isOverlap(point);
+    }
+
+    private boolean isOutside(Point p) {
+        return p.getX() < 0 || p.getX() >= BOARD_WIDTH;
+    }
+
+    private boolean isBottom(Point p) {
+        return p.getY() == BOARD_HEIGHT;
+    }
+
+    private boolean isOverlap(Point p) {
+        return p.getY() >= 0 && gameGrid[p.getX()][p.getY()] != null;
+    }
+
 
     public Tetromino getTetromino() {
         return tetromino;
