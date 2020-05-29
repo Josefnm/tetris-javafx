@@ -30,7 +30,7 @@ public class GameLogic {
                 frame++;
                 // javafx runs at 60 frames by default. Pieces drop every DROP_SPEED frames.
                 if (frame % DROP_SPEED == 0) {
-                    //TODO drop pieces
+                    tetromino.moveDown();
                 }
             }
         };
