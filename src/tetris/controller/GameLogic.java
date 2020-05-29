@@ -46,7 +46,7 @@ public class GameLogic {
         animationTimer.start();
     }
 
-    private void render(){
+    public void render(){
         graphicsContext.clearRect(0, 0, TILE_SIZE * BOARD_WIDTH, TILE_SIZE * BOARD_HEIGHT);
         graphicsContext.setFill(tetromino.getColor());
         for (Point p : tetromino.getAbsolutePositions()) {
@@ -57,5 +57,9 @@ public class GameLogic {
     public void paintPiece(double x, double y) {
         graphicsContext.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
         graphicsContext.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    }
+
+    public Tetromino getTetromino() {
+        return tetromino;
     }
 }
