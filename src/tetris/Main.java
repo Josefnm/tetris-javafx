@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import tetris.controller.GameLogic;
+import tetris.controller.GuiController;
 
 public class Main extends Application {
 
@@ -15,6 +17,10 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("view/gui.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
+
+        GuiController guiController = loader.getController();
+        GameLogic gameLogic = new GameLogic(guiController.getGraphicsContext());
+        gameLogic.runTimer();
 
         primaryStage.setTitle(TITLE);
         primaryStage.setResizable(false);
