@@ -5,7 +5,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 
+import static tetris.controller.GameLogic.BOARD_HEIGHT;
+import static tetris.controller.GameLogic.BOARD_WIDTH;
+
 public class GuiController {
+
+    public static final int TILE_SIZE = 30;
+
     @FXML
     private Label gameOverLabel;
     @FXML
@@ -20,8 +26,8 @@ public class GuiController {
     @FXML
     public void initialize() {
         //TODO replace with constants
-        gameCanvas.setHeight(600);
-        gameCanvas.setWidth(300);
+        gameCanvas.setHeight(TILE_SIZE * BOARD_HEIGHT);
+        gameCanvas.setWidth(TILE_SIZE * BOARD_WIDTH);
     }
 
     public GraphicsContext getGraphicsContext() {

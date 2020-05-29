@@ -2,15 +2,25 @@ package tetris.controller;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.paint.Color;
+import tetris.model.Tetromino;
+import tetris.model.TetrominoGenerator;
 
 public class GameLogic {
 
-    private long frame = 0;
+    public static final int BOARD_WIDTH = 10;
+    public static final int BOARD_HEIGHT = 20;
+    public static final int DROP_SPEED = 48;
 
+    private int frame = 0;
+
+    private TetrominoGenerator tetrominoGenerator;
     private Color[][] gameGrid;
+    private Tetromino tetromino;
 
     public GameLogic() {
-        this.gameGrid = new Color[10][20];
+        this.gameGrid = new Color[BOARD_WIDTH][BOARD_HEIGHT];
+        this.tetrominoGenerator = new TetrominoGenerator();
+        this.tetromino = tetrominoGenerator.getRandomTetromino();
     }
 
     public void runTimer() {
@@ -18,10 +28,10 @@ public class GameLogic {
             @Override
             public void handle(long now) {
                 frame++;
-                if(frame%48==0){
+                // javafx runs at 60 frames by default. Pieces drop every DROP_SPEED frames.
+                if (frame % DROP_SPEED == 0) {
                     //TODO drop pieces
                 }
-
             }
         };
         animationTimer.start();
