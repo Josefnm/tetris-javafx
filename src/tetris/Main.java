@@ -43,7 +43,7 @@ public class Main extends Application {
                 gameLogic.tryMove(Tetromino::rotateClockwise, Tetromino::rotateCounterClockwise);
                 break;
             case DOWN:
-                gameLogic.tryMove(Tetromino::moveDown, Tetromino::moveUp);
+                gameLogic.tryMoveDown();
                 break;
             case LEFT:
                 gameLogic.tryMove(Tetromino::moveLeft, Tetromino::moveRight);
