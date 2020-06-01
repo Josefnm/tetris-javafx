@@ -103,7 +103,15 @@ public class GameLogic {
             gameGrid[piece.getX()][piece.getY()] = tetromino.getColor();
         }
         rowsCleared += removeFullRows();
-        tetromino = tetrominoGenerator.getRandomTetromino();
+        trySpawnTetromino();
+    }
+
+    private void trySpawnTetromino() {
+        Tetromino tetromino = tetrominoGenerator.getRandomTetromino();
+        boolean isOverlap = tetromino.getAbsolutePositions().stream().anyMatch(this::isOverlap);
+        if (!isOverlap) {
+            this.tetromino = tetromino;
+        }
     }
 
     private boolean isInvalidMove(Point point) {
