@@ -30,6 +30,11 @@ public class GuiController {
         gameCanvas.setWidth(TILE_SIZE * BOARD_WIDTH);
     }
 
+
+    public void bindProperties(GameLogic gameLogic) {
+        clearedLabel.textProperty().bind(gameLogic.rowsClearedProperty().asString());
+    }
+
     public GraphicsContext getGraphicsContext() {
         return gameCanvas.getGraphicsContext2D();
     }

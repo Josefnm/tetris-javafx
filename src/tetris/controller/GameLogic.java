@@ -1,6 +1,10 @@
 package tetris.controller;
 
 import javafx.animation.AnimationTimer;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import tetris.model.Point;
@@ -20,7 +24,7 @@ public class GameLogic {
 
     private int frame = 0;
 
-    private int rowsCleared = 0;
+    private IntegerProperty rowsCleared;
 
     private TetrominoGenerator tetrominoGenerator;
     private Color[][] gameGrid;
@@ -28,6 +32,9 @@ public class GameLogic {
     private GraphicsContext graphicsContext;
 
     public GameLogic(GraphicsContext graphicsContext) {
+        this.rowsCleared = new SimpleIntegerProperty(0);
+
+
         this.graphicsContext = graphicsContext;
         this.gameGrid = new Color[BOARD_WIDTH][BOARD_HEIGHT];
         this.tetrominoGenerator = new TetrominoGenerator();
@@ -102,7 +109,7 @@ public class GameLogic {
         for (Point piece : pieces) {
             gameGrid[piece.getX()][piece.getY()] = tetromino.getColor();
         }
-        rowsCleared += removeFullRows();
+        rowsCleared.set(rowsCleared.get() + removeFullRows());
         trySpawnTetromino();
     }
 
@@ -157,4 +164,9 @@ public class GameLogic {
             }
         }
     }
+
+    public IntegerProperty rowsClearedProperty() {
+        return rowsCleared;
+    }
+
 }
