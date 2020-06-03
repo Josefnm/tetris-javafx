@@ -1,6 +1,11 @@
 package tetris.controller;
 
 import javafx.animation.AnimationTimer;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import tetris.model.Point;
@@ -17,10 +22,14 @@ public class GameLogic {
     public static final int BOARD_WIDTH = 10;
     public static final int BOARD_HEIGHT = 20;
     public static final int DROP_SPEED = 48;
+    public static final int LEVEL_DIVIDER = 10;
+    private static final int[] POINTS = new int[]{0, 40, 100, 300, 1200};
 
     private int frame = 0;
 
-    private int rowsCleared = 0;
+    private IntegerProperty rowsCleared;
+    private IntegerProperty level;
+    private IntegerProperty score;
 
     private TetrominoGenerator tetrominoGenerator;
     private Color[][] gameGrid;
@@ -28,6 +37,13 @@ public class GameLogic {
     private GraphicsContext graphicsContext;
 
     public GameLogic(GraphicsContext graphicsContext) {
+        this.rowsCleared = new SimpleIntegerProperty(0);
+        this.level = new SimpleIntegerProperty(0);
+        this.score = new SimpleIntegerProperty(0);
+        this.level.bind(Bindings.createIntegerBinding(
+                () -> rowsCleared.get() / LEVEL_DIVIDER, rowsCleared
+        ));
+
         this.graphicsContext = graphicsContext;
         this.gameGrid = new Color[BOARD_WIDTH][BOARD_HEIGHT];
         this.tetrominoGenerator = new TetrominoGenerator();
@@ -102,7 +118,9 @@ public class GameLogic {
         for (Point piece : pieces) {
             gameGrid[piece.getX()][piece.getY()] = tetromino.getColor();
         }
-        rowsCleared += removeFullRows();
+        int rowsCleared=removeFullRows();
+        this.rowsCleared.set(this.rowsCleared.get() + rowsCleared);
+        addScore(rowsCleared);
         trySpawnTetromino();
     }
 
@@ -157,4 +175,21 @@ public class GameLogic {
             }
         }
     }
+
+    private void addScore(int rowsCleared) {
+        score.set(POINTS[rowsCleared] * (level.get() + 1) + score.get());
+    }
+
+    public IntegerProperty levelProperty() {
+        return level;
+    }
+
+    public IntegerProperty scoreProperty() {
+        return score;
+    }
+
+    public IntegerProperty rowsClearedProperty() {
+        return rowsCleared;
+    }
+
 }
