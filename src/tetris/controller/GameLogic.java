@@ -23,6 +23,7 @@ public class GameLogic {
     public static final int BOARD_HEIGHT = 20;
     public static final int DROP_SPEED = 48;
     public static final int LEVEL_DIVIDER = 10;
+    private static final int[] POINTS = new int[]{0, 40, 100, 300, 1200};
 
     private int frame = 0;
 
@@ -117,7 +118,9 @@ public class GameLogic {
         for (Point piece : pieces) {
             gameGrid[piece.getX()][piece.getY()] = tetromino.getColor();
         }
-        rowsCleared.set(rowsCleared.get() + removeFullRows());
+        int rowsCleared=removeFullRows();
+        this.rowsCleared.set(this.rowsCleared.get() + rowsCleared);
+        addScore(rowsCleared);
         trySpawnTetromino();
     }
 
@@ -171,6 +174,10 @@ public class GameLogic {
                 gameGrid[x][y] = gameGrid[x][y - 1];
             }
         }
+    }
+
+    private void addScore(int rowsCleared) {
+        score.set(POINTS[rowsCleared] * (level.get() + 1) + score.get());
     }
 
     public IntegerProperty levelProperty() {
