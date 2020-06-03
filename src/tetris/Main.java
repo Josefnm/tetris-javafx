@@ -24,6 +24,7 @@ public class Main extends Application {
 
         GuiController guiController = loader.getController();
         gameLogic = new GameLogic(guiController.getGraphicsContext());
+        guiController.bindProperties(gameLogic);
         gameLogic.runTimer();
 
         scene.setOnKeyPressed(this::keyEventHandler);
