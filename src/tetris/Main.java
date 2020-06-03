@@ -36,24 +36,27 @@ public class Main extends Application {
     }
 
     public void keyEventHandler(KeyEvent keyEvent) {
-        switch (keyEvent.getCode()) {
-            case Z:
-                gameLogic.tryMove(Tetromino::rotateCounterClockwise, Tetromino::rotateClockwise);
-                break;
-            case X:
-                gameLogic.tryMove(Tetromino::rotateClockwise, Tetromino::rotateCounterClockwise);
-                break;
-            case DOWN:
-                gameLogic.tryMoveDown();
-                break;
-            case LEFT:
-                gameLogic.tryMove(Tetromino::moveLeft, Tetromino::moveRight);
-                break;
-            case RIGHT:
-                gameLogic.tryMove(Tetromino::moveRight, Tetromino::moveLeft);
-                break;
+        if (!gameLogic.isGameOver()) {
+
+            switch (keyEvent.getCode()) {
+                case Z:
+                    gameLogic.tryMove(Tetromino::rotateCounterClockwise, Tetromino::rotateClockwise);
+                    break;
+                case X:
+                    gameLogic.tryMove(Tetromino::rotateClockwise, Tetromino::rotateCounterClockwise);
+                    break;
+                case DOWN:
+                    gameLogic.tryMoveDown();
+                    break;
+                case LEFT:
+                    gameLogic.tryMove(Tetromino::moveLeft, Tetromino::moveRight);
+                    break;
+                case RIGHT:
+                    gameLogic.tryMove(Tetromino::moveRight, Tetromino::moveLeft);
+                    break;
+            }
+            gameLogic.render();
         }
-        gameLogic.render();
     }
 
     public static void main(String[] args) {

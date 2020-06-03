@@ -21,25 +21,29 @@ public class GameLogic {
 
     public static final int BOARD_WIDTH = 10;
     public static final int BOARD_HEIGHT = 20;
-    public static final int DROP_SPEED = 48;
     public static final int LEVEL_DIVIDER = 10;
     private static final int[] POINTS = new int[]{0, 40, 100, 300, 1200};
 
     private int frame = 0;
 
+    private IntegerProperty gameSpeed;
     private IntegerProperty rowsCleared;
     private IntegerProperty level;
     private IntegerProperty score;
+    private BooleanProperty gameOver;
 
     private TetrominoGenerator tetrominoGenerator;
     private Color[][] gameGrid;
     private Tetromino tetromino;
     private GraphicsContext graphicsContext;
 
+
     public GameLogic(GraphicsContext graphicsContext) {
         this.rowsCleared = new SimpleIntegerProperty(0);
         this.level = new SimpleIntegerProperty(0);
         this.score = new SimpleIntegerProperty(0);
+        this.gameSpeed = new SimpleIntegerProperty();
+        this.gameOver = new SimpleBooleanProperty(false);
         this.level.bind(Bindings.createIntegerBinding(
                 () -> rowsCleared.get() / LEVEL_DIVIDER, rowsCleared
         ));
@@ -53,18 +57,41 @@ public class GameLogic {
 
     public void runTimer() {
         render();
+        gameSpeed.bind(Bindings.createIntegerBinding(
+                () -> getSpeedForLevel(level.get()), level
+        ));
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 frame++;
-                // javafx runs at 60 frames by default. Pieces drop every DROP_SPEED frames.
-                if (frame % DROP_SPEED == 0) {
+                if (frame % gameSpeed.get() == 0) {
                     tryMoveDown();
                     render();
                 }
             }
         };
+        gameOver.addListener((observableValue, oldValue, newValue) -> {
+            if (newValue) animationTimer.stop();
+        });
         animationTimer.start();
+    }
+
+    public static int getSpeedForLevel(int level) {
+        if (level == 0) return 48;
+        if (level == 1) return 43;
+        if (level == 2) return 38;
+        if (level == 3) return 33;
+        if (level == 4) return 28;
+        if (level == 5) return 23;
+        if (level == 6) return 18;
+        if (level == 7) return 13;
+        if (level == 8) return 8;
+        if (level == 9) return 6;
+        if (level <= 12) return 5;
+        if (level <= 16) return 4;
+        if (level <= 19) return 3;
+        if (level <= 29) return 2;
+        return 1;
     }
 
     public void render() {
@@ -114,20 +141,26 @@ public class GameLogic {
     }
 
     private void endTetromino() {
-        var pieces = tetromino.getAbsolutePositions();
-        for (Point piece : pieces) {
-            gameGrid[piece.getX()][piece.getY()] = tetromino.getColor();
-        }
-        int rowsCleared=removeFullRows();
+        putTetrominoOnGrid();
+        int rowsCleared = removeFullRows();
         this.rowsCleared.set(this.rowsCleared.get() + rowsCleared);
         addScore(rowsCleared);
         trySpawnTetromino();
     }
 
+    void putTetrominoOnGrid() {
+        var pieces = tetromino.getAbsolutePositions();
+        for (Point piece : pieces) {
+            gameGrid[piece.getX()][piece.getY()] = tetromino.getColor();
+        }
+    }
+
     private void trySpawnTetromino() {
         Tetromino tetromino = tetrominoGenerator.getRandomTetromino();
         boolean isOverlap = tetromino.getAbsolutePositions().stream().anyMatch(this::isOverlap);
-        if (!isOverlap) {
+        if (isOverlap) {
+            gameOver.set(true);
+        } else {
             this.tetromino = tetromino;
         }
     }
@@ -192,4 +225,7 @@ public class GameLogic {
         return rowsCleared;
     }
 
+    public boolean isGameOver(){
+        return gameOver.get();
+    }
 }
