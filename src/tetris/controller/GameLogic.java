@@ -1,6 +1,7 @@
 package tetris.controller;
 
 import javafx.animation.AnimationTimer;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,10 +22,13 @@ public class GameLogic {
     public static final int BOARD_WIDTH = 10;
     public static final int BOARD_HEIGHT = 20;
     public static final int DROP_SPEED = 48;
+    public static final int LEVEL_DIVIDER = 10;
 
     private int frame = 0;
 
     private IntegerProperty rowsCleared;
+    private IntegerProperty level;
+    private IntegerProperty score;
 
     private TetrominoGenerator tetrominoGenerator;
     private Color[][] gameGrid;
@@ -33,7 +37,11 @@ public class GameLogic {
 
     public GameLogic(GraphicsContext graphicsContext) {
         this.rowsCleared = new SimpleIntegerProperty(0);
-
+        this.level = new SimpleIntegerProperty(0);
+        this.score = new SimpleIntegerProperty(0);
+        this.level.bind(Bindings.createIntegerBinding(
+                () -> rowsCleared.get() / LEVEL_DIVIDER, rowsCleared
+        ));
 
         this.graphicsContext = graphicsContext;
         this.gameGrid = new Color[BOARD_WIDTH][BOARD_HEIGHT];
@@ -163,6 +171,14 @@ public class GameLogic {
                 gameGrid[x][y] = gameGrid[x][y - 1];
             }
         }
+    }
+
+    public IntegerProperty levelProperty() {
+        return level;
+    }
+
+    public IntegerProperty scoreProperty() {
+        return score;
     }
 
     public IntegerProperty rowsClearedProperty() {

@@ -25,7 +25,6 @@ public class GuiController {
 
     @FXML
     public void initialize() {
-        //TODO replace with constants
         gameCanvas.setHeight(TILE_SIZE * BOARD_HEIGHT);
         gameCanvas.setWidth(TILE_SIZE * BOARD_WIDTH);
     }
@@ -33,6 +32,8 @@ public class GuiController {
 
     public void bindProperties(GameLogic gameLogic) {
         clearedLabel.textProperty().bind(gameLogic.rowsClearedProperty().asString());
+        levelLabel.textProperty().bind(gameLogic.levelProperty().asString());
+        scoreLabel.textProperty().bind(gameLogic.scoreProperty().asString());
     }
 
     public GraphicsContext getGraphicsContext() {
