@@ -2,7 +2,9 @@ package tetris.controller;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -28,6 +30,7 @@ public class GameLogic {
     private IntegerProperty rowsCleared;
     private IntegerProperty level;
     private IntegerProperty score;
+    private BooleanProperty gameOver;
 
     private TetrominoGenerator tetrominoGenerator;
     private Color[][] gameGrid;
@@ -39,11 +42,12 @@ public class GameLogic {
         this.rowsCleared = new SimpleIntegerProperty(0);
         this.level = new SimpleIntegerProperty(0);
         this.score = new SimpleIntegerProperty(0);
+        this.gameSpeed = new SimpleIntegerProperty();
+        this.gameOver = new SimpleBooleanProperty(false);
         this.level.bind(Bindings.createIntegerBinding(
                 () -> rowsCleared.get() / LEVEL_DIVIDER, rowsCleared
         ));
 
-        this.gameSpeed = new SimpleIntegerProperty();
         this.graphicsContext = graphicsContext;
         this.gameGrid = new Color[BOARD_WIDTH][BOARD_HEIGHT];
         this.tetrominoGenerator = new TetrominoGenerator();
@@ -66,6 +70,9 @@ public class GameLogic {
                 }
             }
         };
+        gameOver.addListener((observableValue, oldValue, newValue) -> {
+            if (newValue) animationTimer.stop();
+        });
         animationTimer.start();
     }
 
@@ -134,20 +141,26 @@ public class GameLogic {
     }
 
     private void endTetromino() {
-        var pieces = tetromino.getAbsolutePositions();
-        for (Point piece : pieces) {
-            gameGrid[piece.getX()][piece.getY()] = tetromino.getColor();
-        }
-        int rowsCleared=removeFullRows();
+        putTetrominoOnGrid();
+        int rowsCleared = removeFullRows();
         this.rowsCleared.set(this.rowsCleared.get() + rowsCleared);
         addScore(rowsCleared);
         trySpawnTetromino();
     }
 
+    void putTetrominoOnGrid() {
+        var pieces = tetromino.getAbsolutePositions();
+        for (Point piece : pieces) {
+            gameGrid[piece.getX()][piece.getY()] = tetromino.getColor();
+        }
+    }
+
     private void trySpawnTetromino() {
         Tetromino tetromino = tetrominoGenerator.getRandomTetromino();
         boolean isOverlap = tetromino.getAbsolutePositions().stream().anyMatch(this::isOverlap);
-        if (!isOverlap) {
+        if (isOverlap) {
+            gameOver.set(true);
+        } else {
             this.tetromino = tetromino;
         }
     }
@@ -212,4 +225,7 @@ public class GameLogic {
         return rowsCleared;
     }
 
+    public boolean isGameOver(){
+        return gameOver.get();
+    }
 }
