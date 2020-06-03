@@ -1,6 +1,9 @@
 package tetris.controller;
 
 import javafx.animation.AnimationTimer;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import tetris.model.Point;
@@ -16,7 +19,9 @@ public class GameLogic {
 
     public static final int BOARD_WIDTH = 10;
     public static final int BOARD_HEIGHT = 20;
-    public static final int DROP_SPEED = 48;
+
+    private IntegerProperty gameSpeed;
+    private IntegerProperty level;
 
     private int frame = 0;
 
@@ -27,7 +32,10 @@ public class GameLogic {
     private Tetromino tetromino;
     private GraphicsContext graphicsContext;
 
+
     public GameLogic(GraphicsContext graphicsContext) {
+        this.gameSpeed = new SimpleIntegerProperty();
+        this.level = new SimpleIntegerProperty(0);
         this.graphicsContext = graphicsContext;
         this.gameGrid = new Color[BOARD_WIDTH][BOARD_HEIGHT];
         this.tetrominoGenerator = new TetrominoGenerator();
@@ -37,18 +45,38 @@ public class GameLogic {
 
     public void runTimer() {
         render();
+        gameSpeed.bind(Bindings.createIntegerBinding(
+                () -> getSpeedForLevel(level.get()), level
+        ));
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 frame++;
-                // javafx runs at 60 frames by default. Pieces drop every DROP_SPEED frames.
-                if (frame % DROP_SPEED == 0) {
+                if (frame % gameSpeed.get() == 0) {
                     tryMoveDown();
                     render();
                 }
             }
         };
         animationTimer.start();
+    }
+
+    public static int getSpeedForLevel(int level) {
+        if (level == 0) return 48;
+        if (level == 1) return 43;
+        if (level == 2) return 38;
+        if (level == 3) return 33;
+        if (level == 4) return 28;
+        if (level == 5) return 23;
+        if (level == 6) return 18;
+        if (level == 7) return 13;
+        if (level == 8) return 8;
+        if (level == 9) return 6;
+        if (level <= 12) return 5;
+        if (level <= 16) return 4;
+        if (level <= 19) return 3;
+        if (level <= 29) return 2;
+        return 1;
     }
 
     public void render() {
